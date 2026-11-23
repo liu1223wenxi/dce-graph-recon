@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>05 · 留出的患者上，邻居帮助补得更准吗？</title><style>
+body { max-width:1000px; margin:2rem auto; padding:0 1rem; font:16px/1.65 system-ui,sans-serif; color:#17304a; background:#f5f8fb; }
+section { margin:1rem 0; padding:.75rem 1.25rem; border:1px solid #dae4ee; border-radius:12px; background:white; }
+img { max-width:100%; height:auto; display:block; } table { border-collapse:collapse; }
+.table-wrap { overflow-x:auto; } th, td { text-align:left; border-bottom:1px solid #e0e8ee; padding:.35rem .6rem; }
+figure { margin:1rem 0; } figcaption { color:#354b5f; } a { color:#145f78; }
+</style><body><h1>05 · 留出的患者上，邻居帮助补得更准吗？</h1>
+<section><h2>先看整体结果</h2>
+<p>本轮 GNN 推理设备为 <code>cuda:0 (NVIDIA GeForce RTX 5080)</code>。指标统计和绘图在 CPU 上完成。</p>
+<p>每位患者只用从未对该患者训练或选轮次的模型评估。两种方法在完全相同的隐藏点上比较，线性分数逐次访视核对到 03。先计算每次访视误差，再对同一患者的访视平均，最后对患者等权平均。表里的误差单位都是百分点，<strong>GNN − 线性为负表示 GNN 更准</strong>。</p>
+<div class='table-wrap'><table><thead><tr><th scope='col'>缺失方式</th><th scope='col'>测试患者数</th><th scope='col'>线性 MAE</th><th scope='col'>GNN MAE</th><th scope='col'>GNN − 线性</th><th scope='col'>GNN 改善人数</th></tr></thead><tbody><tr><td>整帧隔点隐藏</td><td>10</td><td>7.08</td><td>7.06</td><td>-0.02</td><td>6/10</td></tr><tr><td>局部连续缺失</td><td>10</td><td>15.39</td><td>14.45</td><td>-0.94</td><td>10/10</td></tr></tbody></table></div>
+<figure><img src="paired_patient_mae.png" alt="按缺失模式分面的逐患者配对误差图">
+<figcaption>左图是整帧缺失，右图是局部缺失。每点是一位测试患者，横坐标为线性 MAE，纵坐标为 GNN MAE。点在虚线下方表示这位患者用 GNN 补得更准，虚线上方则表示线性插值更准。</figcaption></figure>
+<p><a href="metrics_by_patient.csv">逐患者结果</a> · <a href="metrics_by_visit.csv">逐访视结果</a> · <a href="summary.csv">含 RMSE 的汇总表</a> · <a href="../04_training/index.html">训练与划分</a>。</p></section>
+<section><h2>再跟踪一次具体的修正</h2>
+<ol><li>从左图的黄星出发，它是要补的节点。相连的青点是这个时刻有实测值的邻居，紫点在这个时刻只有各自的线性估计。</li>
+<li>中图只画黄星节点的曲线。黑实点为模型能看到的测量，黑虚线是完整实测曲线。蓝圈和紫方块分别是线性与 GNN 的补值。竖虚线对应右图正在拆解的时刻。</li>
+<li>右图每条横柱是一个邻居加权后的实际贡献。向右抬高线性值，向左降低线性值。把这些柱子的有符号数值相加，再加到线性值上，得到紫方块。权重本身只表示这条边占的份额，方向看有符号的贡献。</li></ol>
+<p>两张图来自同一个预先选定的测试访视。示例节点按掩码和邻接选择，局部缺失时优先展示仍能接收到实测邻居的节点。</p></section>
+<section><h2>整帧隔点隐藏的单点拆解</h2>
+<figure><img src="neighbors_global_alternating.png" alt="目标和邻居位置、目标实测与估计曲线、邻居贡献条形图"></figure>
+<p>示例 BC01_V1，节点 77，TT 311.7 秒。线性值 +53.40%，
+所有邻居的贡献合计 -0.90 个百分点，GNN 值 +52.50%。原实测值 +43.61% 用来核对。</p>
+<div class='table-wrap'><table><thead><tr><th scope='col'>邻居编号</th><th scope='col'>该时刻数据</th><th scope='col'>邻居值 (%)</th><th scope='col'>权重</th><th scope='col'>加权贡献 (百分点)</th></tr></thead><tbody><tr><td>62</td><td>线性估计</td><td>+52.70</td><td>0.246</td><td>-0.54</td></tr><tr><td>60</td><td>线性估计</td><td>+122.77</td><td>0.250</td><td>-0.35</td></tr><tr><td>87</td><td>线性估计</td><td>+55.65</td><td>0.251</td><td>-0.22</td></tr><tr><td>76</td><td>线性估计</td><td>+36.43</td><td>0.254</td><td>+0.21</td></tr></tbody></table></div></section><section><h2>局部连续缺失的单点拆解</h2>
+<figure><img src="neighbors_local_gap.png" alt="目标和邻居位置、目标实测与估计曲线、邻居贡献条形图"></figure>
+<p>示例 BC01_V1，节点 52，TT 231 秒。线性值 +28.52%，
+所有邻居的贡献合计 +3.00 个百分点，GNN 值 +31.52%。原实测值 +39.28% 用来核对。</p>
+<div class='table-wrap'><table><thead><tr><th scope='col'>邻居编号</th><th scope='col'>该时刻数据</th><th scope='col'>邻居值 (%)</th><th scope='col'>权重</th><th scope='col'>加权贡献 (百分点)</th></tr></thead><tbody><tr><td>61</td><td>线性估计</td><td>+82.28</td><td>0.204</td><td>+0.69</td></tr><tr><td>40</td><td>实测</td><td>+45.76</td><td>0.199</td><td>+0.63</td></tr><tr><td>34</td><td>实测</td><td>+41.67</td><td>0.198</td><td>+0.62</td></tr><tr><td>54</td><td>实测</td><td>+24.78</td><td>0.197</td><td>+0.56</td></tr><tr><td>51</td><td>线性估计</td><td>+21.77</td><td>0.201</td><td>+0.50</td></tr></tbody></table></div></section>
+<section><p>这些贡献解释的是模型怎样算出该点的修正。整体误差比较检验这套模型在当前数据和缺失设置下的表现。要单独测量正确邻接关系的价值，可以另做遮蔽邻居或打乱连接实验。</p></section></body></html>

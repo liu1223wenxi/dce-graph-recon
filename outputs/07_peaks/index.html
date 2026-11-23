@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>07 · 补完以后，峰值也更准了吗？</title><style>
+body { max-width:1000px; margin:2rem auto; padding:0 1rem; font:16px/1.65 system-ui,sans-serif; color:#17304a; background:#f5f8fb; }
+section { margin:1rem 0; padding:.75rem 1.25rem; border:1px solid #dae4ee; border-radius:12px; background:white; }
+img { max-width:100%; height:auto; display:block; } table { border-collapse:collapse; }
+.table-wrap { overflow-x:auto; } th, td { text-align:left; border-bottom:1px solid #e0e8ee; padding:.35rem .6rem; }
+figure { margin:1rem 0; } figcaption { color:#354b5f; } a { color:#145f78; }
+</style><body><h1>07 · 补完以后，峰值也更准了吗？</h1>
+<section><h2>测什么</h2><p>本轮做的是普通区域分析。图中的每个节点是一条区域曲线，目前没有使用病灶标注。</p>
+<p>每种方法使用相同的局部缺失点。分别取完整曲线和补全曲线在现有采样时刻的最大值，再算两者相差多少个百分点。比如完整峰值为 +70%，补完算出 +62%，差 8 个百分点。这里评估的是相对首帧信号的采样峰高。</p>
+<p>第一行纳入所有在原掩码下受影响的曲线。第二行只保留参考峰值落在受影响帧里的曲线，方便看真正可能漏掉峰值的情况。若多个时刻并列峰值，只有全部受影响才进第二行。先平均同次访视的入选曲线，再平均同一患者的访视，最后对患者等权。</p><div class='table-wrap'><table><thead><tr><th scope='col'>分析范围</th><th scope='col'>患者数</th><th scope='col'>线性峰值误差</th><th scope='col'>只看本区域</th><th scope='col'>GNN</th><th scope='col'>GNN − 线性</th></tr></thead><tbody><tr><td>所有受缺失影响的曲线</td><td>10</td><td>4.931</td><td>4.925</td><td>4.918</td><td>-0.013</td></tr><tr><td>参考峰值所在的帧受缺失影响</td><td>10</td><td>12.257</td><td>12.240</td><td>12.216</td><td>-0.041</td></tr></tbody></table></div></section>
+<section><h2>怎么看图</h2><figure><img src="peak_comparison.png" alt="逐患者峰值误差和留出患者的峰值示例">
+<figcaption>左图的小点代表患者，菱形是各方法平均，越低越好。右图黑虚线是完整实测曲线，叉号标出受影响的时刻，三种颜色分别对应补完后的曲线，空心圈标记各自的峰值。示例优先选参考峰值受影响的曲线，按样本和节点编号固定选择。</figcaption></figure>
+<p><a href="peak_errors_by_unit.csv">逐区域或病灶峰值</a> · <a href="metrics_by_patient.csv">逐患者结果</a> · <a href="summary.csv">汇总表</a>。</p></section>
+<section><p>这些结果沿用 05 已查看过的同一批留出患者，是针对本批数据和人工缺失方式的探索性分析。医学解释需要经核验的病灶标注和独立验证。</p></section></body></html>

@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01 · 从 DICOM 到时空数组</title><style>
+body { max-width:1000px; margin:2rem auto; padding:0 1rem; font:16px/1.65 system-ui,sans-serif; color:#17304a; background:#f5f8fb; }
+section { margin:1rem 0; padding:.75rem 1.25rem; border:1px solid #dae4ee; border-radius:12px; background:white; }
+img { max-width:100%; height:auto; display:block; } table { border-collapse:collapse; }
+.table-wrap { overflow-x:auto; } th, td { text-align:left; border-bottom:1px solid #e0e8ee; padding:.35rem .6rem; }
+figure { margin:1rem 0; } figcaption { color:#354b5f; } a { color:#145f78; }
+</style><body><h1>01 · 从 DICOM 到时空数组</h1>
+<section><p>每次检查提取中央轴位切片，按物理坐标在每个时间帧找到同一层。一个样本就是 <strong>[时间, 行, 列]</strong> 的数组。</p>
+<figure><img src="preview.png" alt="MRI 首帧、前景与相对信号变化"><figcaption>左图用于确定前景。中图的白色区域会进入建图。右图显示相对首帧的信号变化，极端值仅在显示时截断。</figcaption></figure>
+<p>相对信号变化 = 100 × (当前信号 − 首帧信号) / 首帧信号。首帧会保留为输入，且这里尚未验证它是否为注射前影像。
+前景是从首帧信号估计的区域。它不提供病灶定位，本阶段也没有做运动配准。</p></section>
+<section><div class='table-wrap'><table><thead><tr><th scope='col'>样本</th><th scope='col'>切片编号</th><th scope='col'>时间帧</th><th scope='col'>首帧 TT (s)</th><th scope='col'>前景像素</th></tr></thead><tbody><tr><td>BC01_V1</td><td>64</td><td>28</td><td>49.6</td><td>47825</td></tr><tr><td>BC01_V2</td><td>64</td><td>28</td><td>49.6</td><td>46527</td></tr><tr><td>BC05_V1</td><td>60</td><td>32</td><td>44.8</td><td>43040</td></tr><tr><td>BC05_V2</td><td>60</td><td>32</td><td>44.8</td><td>42911</td></tr><tr><td>BC06_V1</td><td>60</td><td>32</td><td>44.8</td><td>53781</td></tr><tr><td>BC06_V2</td><td>60</td><td>32</td><td>44.8</td><td>57480</td></tr><tr><td>BC08_V1</td><td>60</td><td>32</td><td>44.8</td><td>48303</td></tr><tr><td>BC08_V2</td><td>60</td><td>32</td><td>44.8</td><td>48632</td></tr><tr><td>BC10_V1</td><td>60</td><td>32</td><td>44.8</td><td>46405</td></tr><tr><td>BC10_V2</td><td>60</td><td>32</td><td>44.8</td><td>38348</td></tr><tr><td>BC12_V1</td><td>60</td><td>32</td><td>44.8</td><td>61636</td></tr><tr><td>BC12_V2</td><td>60</td><td>32</td><td>44.8</td><td>59463</td></tr><tr><td>BC13_V1</td><td>60</td><td>32</td><td>44.8</td><td>43632</td></tr><tr><td>BC13_V2</td><td>60</td><td>32</td><td>44.8</td><td>41141</td></tr><tr><td>BC14_V1</td><td>60</td><td>32</td><td>44.8</td><td>44890</td></tr><tr><td>BC14_V2</td><td>60</td><td>32</td><td>44.8</td><td>42092</td></tr><tr><td>BC15_V1</td><td>60</td><td>32</td><td>44.8</td><td>40242</td></tr><tr><td>BC15_V2</td><td>60</td><td>32</td><td>44.8</td><td>41700</td></tr><tr><td>BC16_V1</td><td>60</td><td>32</td><td>44.8</td><td>42377</td></tr><tr><td>BC16_V2</td><td>60</td><td>32</td><td>44.8</td><td>40134</td></tr></tbody></table></div><p><a href="manifest.csv">样本清单和 NPZ 路径</a></p><h2>排除记录</h2>本次筛查没有 QC 排除。</section></body></html>

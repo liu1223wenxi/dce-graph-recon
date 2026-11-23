@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>06 · 邻居到底贡献了什么？</title><style>
+body { max-width:1000px; margin:2rem auto; padding:0 1rem; font:16px/1.65 system-ui,sans-serif; color:#17304a; background:#f5f8fb; }
+section { margin:1rem 0; padding:.75rem 1.25rem; border:1px solid #dae4ee; border-radius:12px; background:white; }
+img { max-width:100%; height:auto; display:block; } table { border-collapse:collapse; }
+.table-wrap { overflow-x:auto; } th, td { text-align:left; border-bottom:1px solid #e0e8ee; padding:.35rem .6rem; }
+figure { margin:1rem 0; } figcaption { color:#354b5f; } a { color:#145f78; }
+</style><body><h1>06 · 邻居到底贡献了什么？</h1>
+<section><h2>对照一：让一个同样会学习的模型只看本区域</h2>
+<p>线性插值给出初值。只看本区域的模型用与 GNN 相同的目标节点特征学习修正，但没有邻居和边特征。两种模型分别有 1657 和 1634 个参数，沿用 04 的患者分折、训练预算和选轮规则。GNN 直接用 04 保存的最佳权重。误差只在原始隐藏点上计算，先平均同一患者的访视，再等权平均患者。</p>
+<div class='table-wrap'><table><thead><tr><th scope='col'>缺失方式</th><th scope='col'>患者数</th><th scope='col'>线性</th><th scope='col'>只看本区域</th><th scope='col'>GNN</th><th scope='col'>GNN − 只看本区域</th></tr></thead><tbody><tr><td>整帧隔点隐藏</td><td>10</td><td>7.079</td><td>7.060</td><td>7.056</td><td>-0.004</td></tr><tr><td>局部连续缺失</td><td>10</td><td>15.392</td><td>14.436</td><td>14.453</td><td>+0.017</td></tr></tbody></table></div><p>单位均为百分点。最后一列为负，表示 GNN 比只看本区域的模型更准。</p></section>
+<section><h2>对照二：保持缺口不变，只撤掉邻居当时的实测值</h2>
+<p>只看局部缺失中原本有实测邻居的点。边、目标的可见数据和评估位置保持一致。同一个 GNN 再预测一次，这次每条来自实测邻居的消息改用该邻居前后观测算出的线性估计，同时更新观测标记和时间缺口特征。这是推理时的敏感性检查，使用了比训练时更少的同刻测量。</p>
+<div class='table-wrap'><table><thead><tr><th scope='col'>患者数</th><th scope='col'>原 GNN</th><th scope='col'>去掉邻居同刻测量</th><th scope='col'>误差变化</th></tr></thead><tbody><tr><td>10</td><td>13.431</td><td>13.495</td><td>+0.063</td></tr></tbody></table></div><p>误差变化为正，表示撤掉这类观测后估计更差。此表只统计受干预的点。</p></section>
+<section><figure><img src="ablation_comparison.png" alt="逐患者配对误差"><figcaption>灰线连的是同一位患者。彩点是患者平均。前两格比较三种方法，右格只比较受到干预的局部缺失点。横轴方法变了，纵轴仍然是 MAE。</figcaption></figure>
+<p><a href="metrics_by_visit.csv">访视明细</a> · <a href="metrics_by_patient.csv">逐患者对照</a> · <a href="summary.csv">汇总</a> · <a href="runs/20261123T213610076843Z/history.csv">对照模型训练记录</a></p></section></body></html>

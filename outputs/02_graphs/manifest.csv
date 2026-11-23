@@ -1,0 +1,21 @@
+﻿sample,patient,visit,nodes,edges,frames,mean_degree,isolated_nodes,file
+BC01_V1,BC01,1,155,373,28,4.81,0,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC01_V1.npz
+BC01_V2,BC01,2,155,377,28,4.86,0,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC01_V2.npz
+BC05_V1,BC05,1,160,390,32,4.88,0,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC05_V1.npz
+BC05_V2,BC05,2,155,374,32,4.83,1,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC05_V2.npz
+BC06_V1,BC06,1,159,392,32,4.93,1,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC06_V1.npz
+BC06_V2,BC06,2,154,385,32,5.0,0,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC06_V2.npz
+BC08_V1,BC08,1,155,373,32,4.81,0,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC08_V1.npz
+BC08_V2,BC08,2,155,377,32,4.86,0,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC08_V2.npz
+BC10_V1,BC10,1,155,376,32,4.85,1,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC10_V1.npz
+BC10_V2,BC10,2,157,369,32,4.7,1,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC10_V2.npz
+BC12_V1,BC12,1,160,394,32,4.92,1,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC12_V1.npz
+BC12_V2,BC12,2,154,385,32,5.0,2,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC12_V2.npz
+BC13_V1,BC13,1,155,378,32,4.88,0,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC13_V1.npz
+BC13_V2,BC13,2,157,366,32,4.66,1,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC13_V2.npz
+BC14_V1,BC14,1,155,363,32,4.68,1,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC14_V1.npz
+BC14_V2,BC14,2,152,370,32,4.87,0,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC14_V2.npz
+BC15_V1,BC15,1,154,361,32,4.69,0,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC15_V1.npz
+BC15_V2,BC15,2,156,376,32,4.82,2,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC15_V2.npz
+BC16_V1,BC16,1,154,372,32,4.83,0,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC16_V1.npz
+BC16_V2,BC16,2,157,362,32,4.61,3,D:/data/QIN Breast DCE-MRI/derived/dce-graph-recon/02_graphs/samples/BC16_V2.npz

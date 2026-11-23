@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03 · 藏起一段曲线，看哪种方法补得准</title><style>
+body { max-width:1000px; margin:2rem auto; padding:0 1rem; font:16px/1.65 system-ui,sans-serif; color:#17304a; background:#f5f8fb; }
+section { margin:1rem 0; padding:.75rem 1.25rem; border:1px solid #dae4ee; border-radius:12px; background:white; }
+img { max-width:100%; height:auto; display:block; } table { border-collapse:collapse; }
+.table-wrap { overflow-x:auto; } th, td { text-align:left; border-bottom:1px solid #e0e8ee; padding:.35rem .6rem; }
+figure { margin:1rem 0; } figcaption { color:#354b5f; } a { color:#145f78; }
+</style><body><h1>03 · 藏起一段曲线，看哪种方法补得准</h1>
+<section><h2>03 做了什么</h2>
+<p><a href="../02_graphs/index.html">02</a> 给了我们每个区域的实测信号曲线和邻居名单。03 做了一次「遮住再补」的实验。我们先故意藏起一部分实测值，只把剩下的值给三种方法。补完后揭开原来的值，比较各方法猜得有多准。这些方法是以后评估 GNN 的参照，也叫 baseline。</p>
+<p>首尾观测保留，所以方法能同时用缺口前后的测量。这里做的是同一次检查内的曲线补全。</p></section>
+<section><h2>第一张图怎么读</h2>
+<figure><img src="baseline_examples.png" alt="上排整帧缺失，下排局部缺失。左侧显示缺失区域，右侧显示选定节点的观测与估计"></figure>
+<ol>
+<li><strong>上排是整帧隔点隐藏。</strong>在 BC01_V1，图左所示 TT 311.7 秒的黄色覆盖全部 155 个节点。当某一整帧被藏起来，空间邻居在同一时刻也缺失。白点所在的节点 77 整条曲线里藏了 13 个时间点。</li>
+<li><strong>下排是局部区域连续隐藏。</strong>黄色仅覆盖一组空间靠近的节点。在这例里，共有 38 个节点在 TT 150.4 到 291.5 秒之间连续缺失 8 帧。图左截取 TT 231 秒，白点对应右图的节点 79。黄色区域外的节点在这些时刻仍有测量。左图灰底用来定位，曲线里的时间看右图横轴。</li>
+<li><strong>在任一张右图里选一个空心圈。</strong>黑色实心点是事先给方法看的值。黑色虚线把实测值连起来供我们核对，包括被藏的那些时刻。同一个横坐标上，蓝、红、紫空心圈分别是三种估计。空心圈在竖直方向离黑色虚线越近，该点误差越小。局部长缺口里，尤其值得看空心圈能否跟上虚线的峰和谷。</li>
+</ol></section>
+<section><h2>三种方法用了哪些信息</h2>
+<ul>
+<li><strong>蓝色 · Linear（线性插值）</strong>。对每个节点，只看该节点已有的测量，把缺口两侧最近的点用直线连起来。</li>
+<li><strong>红色 · PCHIP（保形三次插值）</strong>。仍使用同一节点的观测，用弯曲的线段补齐缺口，尽量保持已有点的变化形态。</li>
+<li><strong>紫色 · PCHIP + graph（固定图平滑）</strong>。先做 PCHIP，再在缺失时刻拉近相邻节点的估计。已有观测保持原样。整帧缺失时，参与平滑的是这一帧各节点的估计；局部缺失时，还能用到缺口外节点在同一时刻的实测值。本轮平滑权重固定为 0.25。</li>
+</ul></section>
+<section><h2>第二张图和结果表</h2>
+<div class='table-wrap'><table><thead><tr><th scope='col'>缺失方式</th><th scope='col'>方法</th><th scope='col'>患者数</th><th scope='col'>平均 MAE (百分点)</th><th scope='col'>平均 RMSE (百分点)</th></tr></thead><tbody><tr><td>Alternating whole frames</td><td>Linear</td><td>10</td><td>7.079</td><td>13.315</td></tr><tr><td>Alternating whole frames</td><td>PCHIP</td><td>10</td><td>7.182</td><td>13.525</td></tr><tr><td>Alternating whole frames</td><td>PCHIP + graph</td><td>10</td><td>10.201</td><td>16.276</td></tr><tr><td>Local spatial gap</td><td>Linear</td><td>10</td><td>15.392</td><td>22.601</td></tr><tr><td>Local spatial gap</td><td>PCHIP</td><td>10</td><td>16.382</td><td>24.139</td></tr><tr><td>Local spatial gap</td><td>PCHIP + graph</td><td>10</td><td>18.505</td><td>25.247</td></tr></tbody></table></div>
+<figure><img src="baseline_comparison.png" alt="两类缺失下三种方法的平均绝对误差"><figcaption>左面板是整帧隔点隐藏，右面板是局部连续缺失。每个黑点代表一位患者，每根柱子是所有患者的等权平均。柱越矮，补得越准。</figcaption></figure>
+<p>图用 MAE（平均绝对误差）。例如实测相对变化为 +40%，估计为 +35%，这点的绝对误差就是 5 个百分点。先对每次检查的隐藏点计算误差，再对同一患者的访视取均值，最后对患者等权平均。表中的 RMSE 同样用百分点表示，对较大的误差更敏感。</p>
+<ul><li><strong>整帧隔点隐藏</strong>。Linear 的平均 MAE 最低，为 7.08 个百分点。加图平滑后，PCHIP 的 MAE 从 7.18 变为 10.20 个百分点，10/10 位患者的 MAE 上升。</li><li><strong>局部连续缺失</strong>。Linear 的平均 MAE 最低，为 15.39 个百分点。加图平滑后，PCHIP 的 MAE 从 16.38 变为 18.51 个百分点，8/10 位患者的 MAE 上升。</li></ul>
+<p>这里评估的是两种人工遮挡方式和这一种固定平滑规则。空间相邻的区域可能具有不同的时间曲线，平滑会拉近它们，这是误差变大的一种可能解释。要评估 GNN，后续可以用相同缺失掩码与线性插值比较，并按患者留出测试数据。</p>
+<p><a href="metrics_by_visit.csv">访视明细</a> · <a href="metrics_by_patient.csv">逐患者指标</a> · <a href="summary.csv">汇总表</a></p></section></body></html>

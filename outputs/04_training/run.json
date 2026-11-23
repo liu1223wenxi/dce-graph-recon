@@ -1,0 +1,249 @@
+{
+  "version": 1,
+  "run_id": "20261117T222155372403Z",
+  "parameters": {
+    "folds": 5,
+    "epochs": 40,
+    "patience": 8,
+    "width": 32,
+    "learning_rate": 0.001,
+    "seed": 2026,
+    "device": "cuda",
+    "threads": 2
+  },
+  "device": "cuda:0 (NVIDIA GeForce RTX 5080)",
+  "inputs": {
+    "BC01_V1": {
+      "patient": "BC01",
+      "visit": "1",
+      "graph_sha256": "d9050882840089fd7ca723f4469487100d274681a034e0b1bcfb53168be5873a",
+      "mask_sha256": "7ecca81708b02ad9daf3b1d0b9d6ed91e0d87c14f3f7bda145ad974de5370d17"
+    },
+    "BC01_V2": {
+      "patient": "BC01",
+      "visit": "2",
+      "graph_sha256": "aea6b87b4192837d56f7447ae8128e528f94c96903ac376db3856da06ae8de03",
+      "mask_sha256": "f940d753e50b89f3762d03176841b475d4144a8cb1fad95aa2a50a884dca7f34"
+    },
+    "BC05_V1": {
+      "patient": "BC05",
+      "visit": "1",
+      "graph_sha256": "6eeee6aba910aeeea749b7277832269f13dbf3ba1e098065d66cce0224033fd2",
+      "mask_sha256": "f854d27a4b16285911f3b6b997a17f01a153805e4e629bd35735f84d86e9a163"
+    },
+    "BC05_V2": {
+      "patient": "BC05",
+      "visit": "2",
+      "graph_sha256": "b70b99239d49c019a4ff09cfc823e979dc0d09c6b5cfb4b32bd87ca52c408851",
+      "mask_sha256": "c91327973d4b1a8eb47258be8a662458a61b0dbe8d0504c202f75d19a117d12e"
+    },
+    "BC06_V1": {
+      "patient": "BC06",
+      "visit": "1",
+      "graph_sha256": "cc01791667bb17e35ffcf17c9fdec34daacaa8fbf42b53f049b973d3650ca5b6",
+      "mask_sha256": "b05dc17e762be174a7802d2c6f7b02c628bb0052343d081545cf1e2de2e44528"
+    },
+    "BC06_V2": {
+      "patient": "BC06",
+      "visit": "2",
+      "graph_sha256": "b769d07b9d3259ed44654a18eb872962b094b4fa37872999efb1e3835c738a07",
+      "mask_sha256": "8183127818adabdb45bb593dc54317416d0e41433aaadde1743850d9c50e5335"
+    },
+    "BC08_V1": {
+      "patient": "BC08",
+      "visit": "1",
+      "graph_sha256": "0035a3fdcafa7d6b2c9c34c2e111dc118ff1a95d25e7b6e895ce2300c19a6ffe",
+      "mask_sha256": "8da0c33ec609a986a0d73bfafc938055def596acb778a37c1a48fd32e5bf1bf0"
+    },
+    "BC08_V2": {
+      "patient": "BC08",
+      "visit": "2",
+      "graph_sha256": "677cde8ec7838f56a28c3a4bf70ff877684cf135beb832230e2f9796b7734bb3",
+      "mask_sha256": "e6c02052801dc3a062f80426bafc062ba1387ae5582dedd6c42777c0e927f9ee"
+    },
+    "BC10_V1": {
+      "patient": "BC10",
+      "visit": "1",
+      "graph_sha256": "cdada4fdc89d4798f6951928725186d738435aebec99438a7d28f5c71b2080b6",
+      "mask_sha256": "527fdaf866725b27a5190e4c7c65fea0b74865a1a049f3f80d8d0d95b605d2f3"
+    },
+    "BC10_V2": {
+      "patient": "BC10",
+      "visit": "2",
+      "graph_sha256": "d2e154f3dd9dfabaa61a53b45b4d4e5deccf1902a0f785524831a0a2053e38ac",
+      "mask_sha256": "8b94bb32a00172627e632a473cccc40051fa2f29ffabdd76ae1ad9c704c0d6d7"
+    },
+    "BC12_V1": {
+      "patient": "BC12",
+      "visit": "1",
+      "graph_sha256": "ae5896b46492368e5ba69452da962a8854782b3db09ac6ae9ba75c53dca6e92a",
+      "mask_sha256": "9dae39700aff7a75cf9e81905f62dce61194df68f32f8812c71028f3fc5af2c4"
+    },
+    "BC12_V2": {
+      "patient": "BC12",
+      "visit": "2",
+      "graph_sha256": "5d876ffd7aa2964783a71c0d73ed185b34b7b2933a44c02c1703922d03638002",
+      "mask_sha256": "c64713b06b55a44e9ef93b7b24db126f378d1fe65993fb92d400c28bd5b20059"
+    },
+    "BC13_V1": {
+      "patient": "BC13",
+      "visit": "1",
+      "graph_sha256": "fb37bc73fdd51b84015a7a30e727edbd64955b7c46f060120edb4d63a452b6d5",
+      "mask_sha256": "f62f958d5407971a9220d9e99994186c8a3766bda4dc38ad3121280ab6f2e37c"
+    },
+    "BC13_V2": {
+      "patient": "BC13",
+      "visit": "2",
+      "graph_sha256": "5ff06226a51d305e9ca4ce56f7de5a97194849de5a5689ff964d3cd170b3e0c4",
+      "mask_sha256": "d94d0f9bf031427d35be698efd031879d9b60e859b93aff2fed6e26089be1a9c"
+    },
+    "BC14_V1": {
+      "patient": "BC14",
+      "visit": "1",
+      "graph_sha256": "83f137dbffd3c9d8956dabf12ab4e99c7d4a5f088dc366c21745fef8a5dabf12",
+      "mask_sha256": "a9933b14239fdd97d98842ab349ff15a47cb1662f44043480a8365b0d8a85490"
+    },
+    "BC14_V2": {
+      "patient": "BC14",
+      "visit": "2",
+      "graph_sha256": "3a0b4d33ed8a69e97902b2c378b85095082c1a0c4851196237ce71e653e4a7c9",
+      "mask_sha256": "0709b8bf99e92456733e224d4b4e237386e549d206fdd8ab226d8ccf2a7a61c3"
+    },
+    "BC15_V1": {
+      "patient": "BC15",
+      "visit": "1",
+      "graph_sha256": "f678404cd8a9a57d3b72f453194e3b01620ac35c3a8ab8b1b6b06856321f98b7",
+      "mask_sha256": "b0ca4b8eeca42aec37cefb2568dc5cd6c41fc2311b6304e9ad816b1b2f02ccf5"
+    },
+    "BC15_V2": {
+      "patient": "BC15",
+      "visit": "2",
+      "graph_sha256": "945b07213d2347ec6250389d5a3a9d32c7124a28f2b10142ea19f17463cc8c4a",
+      "mask_sha256": "77af27f254f97f4b0c1d97585990c82be68bc6a2533b66ed0835062fab74aff1"
+    },
+    "BC16_V1": {
+      "patient": "BC16",
+      "visit": "1",
+      "graph_sha256": "1b90e74139c0789b39f4a5a09a4109b109e979af2c31ed6b8e975d43596ef37a",
+      "mask_sha256": "f3a78a4a6ca22518ed752bd10739c479397d033b168391cab43fa76b0afe8074"
+    },
+    "BC16_V2": {
+      "patient": "BC16",
+      "visit": "2",
+      "graph_sha256": "5cb024fc25724729a9a79c11a9305190aaaf7ed45321e1b20cab8ec3ae11d2e6",
+      "mask_sha256": "1e8ff9d7b00911cdc89bd1ab42dfcf4584b7eeaa5ad99504b11261325c52bcc8"
+    }
+  },
+  "folds": [
+    {
+      "fold": 1,
+      "test": [
+        "BC05",
+        "BC16"
+      ],
+      "validation": [
+        "BC01",
+        "BC13"
+      ],
+      "train": [
+        "BC06",
+        "BC08",
+        "BC10",
+        "BC12",
+        "BC14",
+        "BC15"
+      ],
+      "checkpoint": "fold_01.pt",
+      "best_epoch": 37,
+      "validation_mae_pp": 11.366893351078033
+    },
+    {
+      "fold": 2,
+      "test": [
+        "BC01",
+        "BC13"
+      ],
+      "validation": [
+        "BC08",
+        "BC15"
+      ],
+      "train": [
+        "BC05",
+        "BC06",
+        "BC10",
+        "BC12",
+        "BC14",
+        "BC16"
+      ],
+      "checkpoint": "fold_02.pt",
+      "best_epoch": 29,
+      "validation_mae_pp": 10.505543649196625
+    },
+    {
+      "fold": 3,
+      "test": [
+        "BC08",
+        "BC15"
+      ],
+      "validation": [
+        "BC06",
+        "BC12"
+      ],
+      "train": [
+        "BC01",
+        "BC05",
+        "BC10",
+        "BC13",
+        "BC14",
+        "BC16"
+      ],
+      "checkpoint": "fold_03.pt",
+      "best_epoch": 39,
+      "validation_mae_pp": 7.777164876461029
+    },
+    {
+      "fold": 4,
+      "test": [
+        "BC06",
+        "BC12"
+      ],
+      "validation": [
+        "BC10",
+        "BC14"
+      ],
+      "train": [
+        "BC01",
+        "BC05",
+        "BC08",
+        "BC13",
+        "BC15",
+        "BC16"
+      ],
+      "checkpoint": "fold_04.pt",
+      "best_epoch": 40,
+      "validation_mae_pp": 11.95152997970581
+    },
+    {
+      "fold": 5,
+      "test": [
+        "BC10",
+        "BC14"
+      ],
+      "validation": [
+        "BC05",
+        "BC16"
+      ],
+      "train": [
+        "BC01",
+        "BC06",
+        "BC08",
+        "BC12",
+        "BC13",
+        "BC15"
+      ],
+      "checkpoint": "fold_05.pt",
+      "best_epoch": 39,
+      "validation_mae_pp": 12.024182081222534
+    }
+  ]
+}

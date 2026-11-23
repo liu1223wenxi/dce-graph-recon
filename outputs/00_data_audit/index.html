@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>00 · QIN Breast DCE-MRI 数据导览</title>
+<style>
+body { max-width: 1000px; margin: 32px auto; padding: 0 20px; font: 16px/1.65 system-ui, 'Microsoft YaHei', sans-serif; color: #17304a; background: #f5f8fb; }
+section { background: white; border: 1px solid #dae4ee; border-radius: 12px; margin: 20px 0; padding: 16px 22px; }
+h1, h2 { line-height: 1.25; } a { color: #145f78; }
+.table-wrap { overflow-x: auto; } table { width: 100%; border-collapse: collapse; font-size: .92em; }
+th, td { text-align: left; padding: 6px 9px; border-bottom: 1px solid #e0e8ee; } th { background: #eaf2f8; }
+figure { margin: 14px 0 22px; } img { display: block; width: 100%; height: auto; }
+figcaption { margin-top: 6px; color: #354b5f; }
+</style></head><body>
+<h1>QIN Breast DCE-MRI 数据导览</h1>
+<p>一次 DCE-MRI 检查连续采集多个三维体积，用来观察注入对比剂后 MRI 信号如何随位置和时间变化。</p>
+<section><h2>1. 一条数据有多大？</h2>
+<p><strong>10 位患者 → 20 次检查 → 每次检查 28–32 个带 TT 的时间帧。</strong>
+一个时间帧是一份 3D 体积，由多张二维 DICOM 切片堆叠。空间轴是切片、行、列，加上时间轴后是一份 4D 序列。</p>
+<p>同一患者的 Visit 1 和 Visit 2 来自两次不同检查。这个项目要补的是单次检查内部的动态时间点。
+TT 来自 DICOM 序列名称，报告沿用该标签的秒数。</p>
+<div class='table-wrap'><table><thead><tr><th scope='col'>患者</th><th scope='col'>访视</th><th scope='col'>MR 时间帧</th><th scope='col'>每帧 DICOM 数（最少–最多）</th><th scope='col'>TT 间隔中位数 (s)</th><th scope='col'>有标记的帧</th></tr></thead><tbody><tr><td>BC01</td><td>1</td><td>28</td><td>128–128</td><td>20.2</td><td>0</td></tr><tr><td>BC01</td><td>2</td><td>28</td><td>128–128</td><td>20.2</td><td>0</td></tr><tr><td>BC05</td><td>1</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC05</td><td>2</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC06</td><td>1</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC06</td><td>2</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC08</td><td>1</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC08</td><td>2</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC10</td><td>1</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC10</td><td>2</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC12</td><td>1</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC12</td><td>2</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC13</td><td>1</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC13</td><td>2</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC14</td><td>1</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC14</td><td>2</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC15</td><td>1</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC15</td><td>2</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC16</td><td>1</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr><tr><td>BC16</td><td>2</td><td>32</td><td>120–120</td><td>18.2</td><td>0</td></tr></tbody></table></div>
+<p><a href="studies.csv">逐次检查的完整表</a> · <a href="mr_series.csv">逐帧时间、几何和 QC 表</a></p></section>
+<section><h2>2. 打开一份真实序列</h2>
+<p>示例是 BC05 · Visit 1，每帧包含 120 张 320 × 320 切片。
+图像采用统一灰度范围，可以直接比较不同帧的亮度。</p>
+<figure><img src="mri_montage.png" alt="同一时间的三张切片与同一切片的三个时刻">
+<figcaption>上排固定时间，沿空间看三张切片。下排固定切片，沿时间看早、中、晚三个时刻。</figcaption></figure>
+<figure><img src="dce_playback.gif" alt="MRI 切片与信号曲线同步播放" loading="lazy">
+<figcaption>竖虚线指向当前播放帧。动画使用加速播放，各帧实际时间读图上的 TT 标签。</figcaption></figure>
+<figure><img src="signal_curves.png" alt="彩色采样框与对应的平均 MRI 信号曲线" loading="lazy">
+<figcaption>每条曲线是在同一张切片上，对同色 9 × 9 小框内的像素逐帧求平均。框由首帧自动选取，仅供演示。
+框中心的零基坐标为（行，列）A = (121, 76)；B = (175, 175)；C = (121, 238)。信号单位为 a.u.，没有做配准或浓度换算。
+<a href="example_signals.csv">下载曲线数值</a></figcaption></figure>
+</section>
+<section><h2>3. 图像之外还有什么？</h2>
+<div class='table-wrap'><table><thead><tr><th scope='col'>文件</th><th scope='col'>工作表</th><th scope='col'>字段</th><th scope='col'>对项目有什么用</th></tr></thead><tbody><tr><td>QIN-Breast-DCE-MRI_Response.xlsx</td><td>Sheet1</td><td>Complete response | Non-complete response</td><td>病理完全响应 3 人，未完全响应 7 人。曲线补全不使用这些标签。</td></tr><tr><td>QINBreastDCE-MRI_AIF-1.xlsx</td><td>AIF Timecourse</td><td>AIF [CRp] (mM) | Time Course (sec) | from Li et al 2008, doi: 10.1073/pnas.0804224105</td><td>310 个时间–浓度样本。群体平均动脉输入函数，用于描述对比剂的输入。</td></tr></tbody></table></div><figure><img src="aif.png" alt="群体平均 AIF 曲线">
+      <figcaption>这张图的纵轴是血浆对比剂浓度，单位 mM，横轴来自 AIF 表。图中的时间轴未与 MRI 的 TT 对齐。</figcaption>
+      </figure>
+<p>在 20 次检查中找到了列在清单里的 DICOM-KO 辅助对象。本地另发现 0 个独立的 NIfTI 或 MATLAB 文件。
+当前按文件名和清单识别辅助对象，KO 附件和病灶 ROI 仍待核实。</p></section>
+<p>来源 <a href="https://doi.org/10.7937/K9/TCIA.2014.A2N1IXOX">TCIA QIN Breast DCE-MRI</a>，
+<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3998693/">原始研究的采集与数据说明</a>。</p>
+</body></html>

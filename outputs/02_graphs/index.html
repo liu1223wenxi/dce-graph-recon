@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02 · 把 MRI 切片变成空间图</title><style>
+body { max-width:1000px; margin:2rem auto; padding:0 1rem; font:16px/1.65 system-ui,sans-serif; color:#17304a; background:#f5f8fb; }
+section { margin:1rem 0; padding:.75rem 1.25rem; border:1px solid #dae4ee; border-radius:12px; background:white; }
+img { max-width:100%; height:auto; display:block; } table { border-collapse:collapse; }
+.table-wrap { overflow-x:auto; } th, td { text-align:left; border-bottom:1px solid #e0e8ee; padding:.35rem .6rem; }
+figure { margin:1rem 0; } figcaption { color:#354b5f; } a { color:#145f78; }
+</style><body><h1>02 · 把 MRI 切片变成空间图</h1>
+<section><h2>02 做了什么</h2>
+<p>01 给了我们一张随时间变化的 MRI 切片。02 把切片划成小区域，每个区域作为一个<strong>节点</strong>。每个节点有自己的信号曲线，也知道哪些区域紧挨着它。03 会利用这些邻居关系做一次补全实验。</p>
+<p>图中示例 <strong>BC01_V1</strong> 有 <strong>155 个节点、373 条边、28 个时间点</strong>。可以把它想成一张 155 × 28 的表，每行一个区域，每列一个时间点，再加一份「哪些行互为邻居」的名单。</p></section>
+<section><h2>从左到右读图</h2>
+<figure><img src="graph_preview.png" alt="左图是 MRI 分区，中图是各分区之间的邻接关系，右图是标记区域的信号曲线"></figure>
+<ol>
+<li><strong>左图看区域。</strong>灰底是检查的首帧。紫色线圈出由 SLIC 划分的像素小区域。划分只用首帧的外观和像素位置，一次划好后对整段序列复用。</li>
+<li><strong>中图看邻居。</strong>每个点放在区域中心。两个区域如果有像素沿边相接，就把两个中心画一条线。连线表达邻接，MRI 亮度看灰底。图中标记的 38、77、115 是区域编号。</li>
+<li><strong>右图看区域怎样随时间变化。</strong>用相同颜色和编号找回中图的位置。蓝线、红线、紫线分别来自对应区域。每个时间点的纵轴值是该区域内像素相对首帧的百分比变化取平均。首帧因此从 0% 起步。横轴 TT 是扫描序列标签上的时间（秒）。</li>
+</ol>
+<p>可以试着跟着一条线读。例如纵轴到 +20%，表示这个区域内像素的相对变化平均约为 +20%。如果某个点被藏起来，左、右相邻的时间点属于<strong>同一区域的时间信息</strong>，中图和它相连的点则提供<strong>其他区域的空间信息</strong>。03 比较这两种信息怎么用。</p></section>
+<section><div class='table-wrap'><table><thead><tr><th scope='col'>样本</th><th scope='col'>节点</th><th scope='col'>无向边</th><th scope='col'>时间帧</th><th scope='col'>平均度</th><th scope='col'>孤立节点</th></tr></thead><tbody><tr><td>BC01_V1</td><td>155</td><td>373</td><td>28</td><td>4.81</td><td>0</td></tr><tr><td>BC01_V2</td><td>155</td><td>377</td><td>28</td><td>4.86</td><td>0</td></tr><tr><td>BC05_V1</td><td>160</td><td>390</td><td>32</td><td>4.88</td><td>0</td></tr><tr><td>BC05_V2</td><td>155</td><td>374</td><td>32</td><td>4.83</td><td>1</td></tr><tr><td>BC06_V1</td><td>159</td><td>392</td><td>32</td><td>4.93</td><td>1</td></tr><tr><td>BC06_V2</td><td>154</td><td>385</td><td>32</td><td>5.0</td><td>0</td></tr><tr><td>BC08_V1</td><td>155</td><td>373</td><td>32</td><td>4.81</td><td>0</td></tr><tr><td>BC08_V2</td><td>155</td><td>377</td><td>32</td><td>4.86</td><td>0</td></tr><tr><td>BC10_V1</td><td>155</td><td>376</td><td>32</td><td>4.85</td><td>1</td></tr><tr><td>BC10_V2</td><td>157</td><td>369</td><td>32</td><td>4.7</td><td>1</td></tr><tr><td>BC12_V1</td><td>160</td><td>394</td><td>32</td><td>4.92</td><td>1</td></tr><tr><td>BC12_V2</td><td>154</td><td>385</td><td>32</td><td>5.0</td><td>2</td></tr><tr><td>BC13_V1</td><td>155</td><td>378</td><td>32</td><td>4.88</td><td>0</td></tr><tr><td>BC13_V2</td><td>157</td><td>366</td><td>32</td><td>4.66</td><td>1</td></tr><tr><td>BC14_V1</td><td>155</td><td>363</td><td>32</td><td>4.68</td><td>1</td></tr><tr><td>BC14_V2</td><td>152</td><td>370</td><td>32</td><td>4.87</td><td>0</td></tr><tr><td>BC15_V1</td><td>154</td><td>361</td><td>32</td><td>4.69</td><td>0</td></tr><tr><td>BC15_V2</td><td>156</td><td>376</td><td>32</td><td>4.82</td><td>2</td></tr><tr><td>BC16_V1</td><td>154</td><td>372</td><td>32</td><td>4.83</td><td>0</td></tr><tr><td>BC16_V2</td><td>157</td><td>362</td><td>32</td><td>4.61</td><td>3</td></tr></tbody></table></div><p><a href="manifest.csv">图清单和 NPZ 路径</a></p></section></body></html>

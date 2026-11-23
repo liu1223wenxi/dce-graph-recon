@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>04 · 学习怎样用邻居修正插值</title><style>
+body { max-width:1000px; margin:2rem auto; padding:0 1rem; font:16px/1.65 system-ui,sans-serif; color:#17304a; background:#f5f8fb; }
+section { margin:1rem 0; padding:.75rem 1.25rem; border:1px solid #dae4ee; border-radius:12px; background:white; }
+img { max-width:100%; height:auto; display:block; } table { border-collapse:collapse; }
+.table-wrap { overflow-x:auto; } th, td { text-align:left; border-bottom:1px solid #e0e8ee; padding:.35rem .6rem; }
+figure { margin:1rem 0; } figcaption { color:#354b5f; } a { color:#145f78; }
+</style><body><h1>04 · 学习怎样用邻居修正插值</h1>
+<section><h2>想补哪一个值</h2>
+<p>本轮训练设备为 <code>cuda:0 (NVIDIA GeForce RTX 5080)</code>。</p>
+<p>03 先把一部分测量藏起来。04 使用同一份掩码，先对每条区域曲线做线性插值。接下来，在每个缺失时刻问该节点的一圈直接邻居，应该把这个初值调高还是调低。</p>
+<p>邻接边的两个方向各有一条消息。模型同时看目标和邻居的线性估计、该时刻是否实测、在扫描中的时间位置、离前后观测点的时间差、前后观测信号的差值、首帧相对亮度和区域中心距离。它为每条消息输出<strong>一个权重和一项可正可负的建议修正</strong>。同一目标收到的权重之和为 1。每条消息的贡献等于权重乘建议修正。比如初值是 +32%，两个邻居加权后的贡献是 +2 和 −1 个百分点，最终估计为 +33%。没有邻居的节点保留线性估计。</p>
+<p>整帧缺失时，邻居在同一时刻只能提供从各自曲线算出的线性估计。局部缺失时，区域外邻居还能提供同一时刻的实测值。对已观测点直接保留测量。训练时只用被藏的测量值计算误差，逐折学习边上的权重与修正。</p></section>
+<section><h2>患者怎么划分</h2>
+<p>同一患者的两次访视总在同一组。每折用训练患者更新参数，再用独立的验证患者选保存轮次。测试患者的结果由 05 计算，每位患者恰好在一折担任测试。</p>
+<div class='table-wrap'><table><thead><tr><th scope='col'>折</th><th scope='col'>训练患者</th><th scope='col'>验证患者</th><th scope='col'>测试患者</th><th scope='col'>保存轮次</th><th scope='col'>验证 MAE (百分点)</th></tr></thead><tbody><tr><td>1</td><td>BC06, BC08, BC10, BC12, BC14, BC15</td><td>BC01, BC13</td><td>BC05, BC16</td><td>37</td><td>11.37</td></tr><tr><td>2</td><td>BC05, BC06, BC10, BC12, BC14, BC16</td><td>BC08, BC15</td><td>BC01, BC13</td><td>29</td><td>10.51</td></tr><tr><td>3</td><td>BC01, BC05, BC10, BC13, BC14, BC16</td><td>BC06, BC12</td><td>BC08, BC15</td><td>39</td><td>7.78</td></tr><tr><td>4</td><td>BC01, BC05, BC08, BC13, BC15, BC16</td><td>BC10, BC14</td><td>BC06, BC12</td><td>40</td><td>11.95</td></tr><tr><td>5</td><td>BC01, BC06, BC08, BC12, BC13, BC15</td><td>BC05, BC16</td><td>BC10, BC14</td><td>39</td><td>12.02</td></tr></tbody></table></div><p><a href="runs/20261117T222155372403Z/patient_splits.csv">完整的患者划分</a></p></section>
+<section><h2>训练曲线怎么看</h2>
+<figure><img src="training_curves.png" alt="各折训练和验证误差随轮次变化">
+<figcaption>每格是一折。蓝线表示训练过程中各患者批次的误差，红线是在每轮结束后对验证患者测得的误差，纵轴只统计被隐藏的点。虚线处是红线最低的轮次，也是 05 要读取的权重。测试误差在 05 的配对图里。</figcaption></figure>
+<p><a href="runs/20261117T222155372403Z/history.csv">逐轮数值</a></p></section></body></html>
